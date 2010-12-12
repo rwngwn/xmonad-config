@@ -8,6 +8,9 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import XMonad.Actions.WindowGo(runOrRaise)
 import XMonad.Util.EZConfig(additionalKeys, additionalKeysP)
+import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.SetWMName(setWMName)
+
 
 
 
@@ -22,16 +25,18 @@ scratchpads =
 		
 main = do
 	xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobarrc"
-	xmproc <- spawnPipe "stalonetray -bg '#000000' --no-shrink -i 8 --geometry 10x1 --sticky &>/dev/null &"
-	xmonad $ defaultConfig
+	xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
 		{ manageHook 	= namedScratchpadManageHook scratchpads <+> manageDocks <+> manageHook defaultConfig
+		, startupHook	= setWMName "LG3D"
 		, layoutHook 	= avoidStruts  $  layoutHook defaultConfig
 		, borderWidth	= 2 
+		, workspaces	= [ "Web", "IM", "ADS", "TMP" ] ++ map show [5..9]
 		, terminal	= "gnome-terminal"
 		, modMask	= mod4Mask
 		, logHook	= dynamicLogWithPP $ xmobarPP
 			{ ppOutput = hPutStrLn xmproc
-			, ppTitle = xmobarColor "black" "" . shorten 75
+			, ppTitle = xmobarColor "black" "" . shorten 50
+			, ppHiddenNoWindows	= id
 			}
 		} `additionalKeysP`
 		[ ("M-C-b", spawn "firefox -P default")
