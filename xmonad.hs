@@ -12,15 +12,19 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.SetWMName(setWMName)
 import XMonad.Layout.Maximize(maximize, maximizeRestore)
 import XMonad.Layout.ThreeColumns
+import XMonad.Hooks.ManageHelpers
+import XMonad.Layout.NoBorders
 
 
 
 
+-- MyManage hooks defines floating windows 
+-- and which application is started on which workspace
+--
 myManageHook = composeAll . concat $
 	[ [ className   =? c --> doFloat | c <- myFloats]
-	, [ className   =? c --> doShift "Web" | c <- ws1]
-	, [ className   =? c --> doShift "IM" | c <- ws2]
-	, [ className   =? c --> doShift "5" | c <- ws5]
+	, [ className   =? c --> doShift "1:web" | c <- ws1]
+	, [ className   =? c --> doShift "2:im" | c <- ws2]
 	]
 	where
 	myFloats  = 	[ "Dialog", "Gcalctool", "VirtualBox", "Vncviewer"
@@ -29,10 +33,10 @@ myManageHook = composeAll . concat $
 			]
 	ws1       = ["Firefox"]
 	ws2       = ["Pidgin"]
-	ws5       = ["WINWORD.EXE"]
 
 
-
+-- defines possible layouts to be switched from
+--
 myLayout = maximize tiled
 	||| maximize (Mirror tiled)
 	||| maximize Full
@@ -48,6 +52,9 @@ myLayout = maximize tiled
 -- Scratchpads
 scratchpads =
 	[ NS "liferea" "liferea" (className =? "Liferea") defaultFloating
+	, NS "Banshee" "banshee-1" (className =? "banshee-1" ) defaultFloating
+	, NS "Zim" "zim" (className =? "Zim" ) defaultFloating
+	, NS "gnome-volume-control" "gnome-volume-control" (className =? "Gnome-volume-control") defaultFloating
 	, NS "stardict" "stardict" (className =? "Stardict")
 		(customFloating $ W.RationalRect (2/5) (2/5) (1/2) (1/2))
 	] where role = stringProperty "WM_WINDOW_ROLE"
@@ -57,9 +64,9 @@ main = do
 	xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
 		{ manageHook 	= namedScratchpadManageHook scratchpads <+> manageDocks <+> myManageHook <+> manageHook defaultConfig 
 		, startupHook	= setWMName "LG3D"
-		, layoutHook 	= avoidStruts  $ myLayout
+		, layoutHook 	= avoidStruts  $ smartBorders (myLayout) -- smartBorders assure no borders in fullscreen (Mplayer - neede fstype=none in ~/.mplayer/config 
 		, borderWidth	= 2 
-		, workspaces	= [ "Web", "IM", "ADS", "TMP" ] ++ map show [5..9]
+		, workspaces	= [ "1:web", "2:im", "3:terms" ] ++ map show [4..8] ++ [ "9:media" ]
 		, terminal	= "gnome-terminal"
 		, modMask	= mod4Mask
 		, logHook	= dynamicLogWithPP $ xmobarPP
@@ -68,9 +75,12 @@ main = do
 			, ppHiddenNoWindows	= id
 			}
 		} `additionalKeysP`
-		[ ("M-C-b", spawn "firefox -P default")
+		[ ("M-C-f", spawn "firefox -P default")
 		, ("M-C-s", namedScratchpadAction scratchpads "stardict")
 		, ("M-C-l", namedScratchpadAction scratchpads "liferea")
+		, ("M-C-b", namedScratchpadAction scratchpads "Banshee")
+		, ("M-C-z", namedScratchpadAction scratchpads "Zim")
+		, ("M-C-v", namedScratchpadAction scratchpads "gnome-volume-control")
 		, ("M-C-S-l", spawn "gnome-screensaver-command --lock")
  		]		
 
