@@ -54,6 +54,7 @@ scratchpads =
 	[ NS "liferea" "liferea" (className =? "Liferea") defaultFloating
 	, NS "Banshee" "banshee-1" (className =? "banshee-1" ) defaultFloating
 	, NS "Zim" "zim" (className =? "Zim" ) defaultFloating
+	, NS "stalonetray" "stalonetray" (className =? "stalonetray" ) defaultFloating
 	, NS "gnome-volume-control" "gnome-volume-control" (className =? "Gnome-volume-control") defaultFloating
 	, NS "stardict" "stardict" (className =? "Stardict")
 		(customFloating $ W.RationalRect (2/5) (2/5) (1/2) (1/2))
@@ -78,6 +79,7 @@ main = do
 		[ ("M-C-f", spawn "firefox -P default")
 		, ("M-C-s", namedScratchpadAction scratchpads "stardict")
 		, ("M-C-l", namedScratchpadAction scratchpads "liferea")
+		, ("M-C-t", namedScratchpadAction scratchpads "stalonetray")
 		, ("M-C-b", namedScratchpadAction scratchpads "Banshee")
 		, ("M-C-z", namedScratchpadAction scratchpads "Zim")
 		, ("M-C-v", namedScratchpadAction scratchpads "gnome-volume-control")
