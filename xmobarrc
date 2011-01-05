@@ -8,10 +8,11 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Com "uname" ["-s","-r"] "" 36000
+		    , Run Battery ["-L","50","-H","75","--high","green","--normal","yellow", "--low", "red"] 10
     		    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
     		    , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %cpu% | %memory%  | %eth0% | } %StdinReader% { | %LKPR% |  <fc=#ee9a00>%date%</fc>"
+       , template = " %cpu% | %memory%  | %battery% | } %StdinReader% { | %LKPR% |  <fc=#ee9a00>%date%</fc>"
        }
