@@ -28,7 +28,7 @@ myManageHook = composeAll . concat $
 	]
 	where
 	myFloats  = 	[ "Dialog", "Gcalctool", "VirtualBox", "Vncviewer"
-			, "Gnome-display-properties"
+			, "Gnome-display-properties", "Eclipse"
 			, "javax.swing.JDialog", "Downloads"
 			]
 	ws1       = ["Firefox"]
