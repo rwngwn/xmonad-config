@@ -15,7 +15,7 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.NoBorders
 import XMonad.Prompt
-import XMonad.Prompt.Ssh
+import XMonad.Layout.Grid
 
 
 
@@ -27,7 +27,7 @@ myManageHook = composeAll . concat $
 	[ [ className   =? c --> doFloat | c <- myFloats]
 	, [ className   =? c --> doShift "1:web" | c <- ws1]
 	, [ className   =? c --> doShift "2:im" | c <- ws2]
-	, [ className   =? c --> doShift "5" | c <- ws5]
+	, [ className   =? c --> doShift "4:notes" | c <- ws4]
 	]
 	where
 	myFloats  = 	[ "Dialog", "Gcalctool", "VirtualBox", "Vncviewer"
@@ -36,7 +36,7 @@ myManageHook = composeAll . concat $
 			]
 	ws1       = ["Firefox"]
 	ws2       = ["Pidgin"]
-	ws5       = ["Tivoli Directory Integrator"]
+	ws4	  = ["Zim"]
 
 
 -- defines possible layouts to be switched from
@@ -45,6 +45,7 @@ myLayout = maximize tiled
 	||| maximize (Mirror tiled)
 	||| maximize Full
 	||| maximize columns3
+	||| maximize Grid
 	where
 		tiled    = Tall nmaster delta ratio
 		nmaster  = 1
@@ -55,8 +56,8 @@ myLayout = maximize tiled
 
 -- Scratchpads
 scratchpads =
-	, NS "Zim" "zim" (className =? "Zim" ) defaultFloating
-	, NS "stalonetray" "stalonetray" (className =? "stalonetray" ) defaultFloating
+	[ NS "stalonetray" "stalonetray" (className =? "stalonetray" ) defaultFloating
+	, NS "nm-connection-editor" "nm-connection-editor" (className =? "Nm-connection-editor" ) defaultFloating
 	, NS "stardict" "stardict" (className =? "Stardict")
 		(customFloating $ W.RationalRect (2/5) (2/5) (1/2) (1/2))
 	] where role = stringProperty "WM_WINDOW_ROLE"
@@ -65,10 +66,10 @@ main = do
 	xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobarrc"
 	xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
 		{ manageHook 	= namedScratchpadManageHook scratchpads <+> manageDocks <+> myManageHook <+> manageHook defaultConfig 
-		, startupHook	= setWMName "LG3D"
+--		, startupHook	= setWMName "LG3D"
 		, layoutHook 	= avoidStruts  $ smartBorders (myLayout) -- smartBorders assure no borders in fullscreen (Mplayer - neede fstype=none in ~/.mplayer/config 
 		, borderWidth	= 2 
-		, workspaces	= [ "1:web", "2:im", "3:terms" ] ++ map show [4..8] ++ [ "9:media" ]
+		, workspaces	= [ "1:web", "2:im", "3:terms", "4:notes" ] ++ map show [5..8] ++ [ "9:media" ]
 		, terminal	= "gnome-terminal"
 		, modMask	= mod4Mask
 		, logHook	= dynamicLogWithPP $ xmobarPP
@@ -83,7 +84,7 @@ main = do
 		, ("M-C-z", namedScratchpadAction scratchpads "Zim")
 		, ("M-C-S-c", spawn "setxkbmap cz")
 		, ("M-C-S-e", spawn "setxkbmap us")
-		, ("M-S-s", sshPrompt defaultXPConfig)
+		, ("M-C-l", spawn "xlock -mode blank")
 
  		]		
 
