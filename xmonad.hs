@@ -27,16 +27,14 @@ myManageHook = composeAll . concat $
 	[ [ className   =? c --> doFloat | c <- myFloats]
 	, [ className   =? c --> doShift "1:web" | c <- ws1]
 	, [ className   =? c --> doShift "2:im" | c <- ws2]
-	, [ className   =? c --> doShift "4:notes" | c <- ws4]
 	]
 	where
-	myFloats  = 	[ "Dialog", "Gcalctool", "VirtualBox", "Vncviewer"
+	myFloats  = 	[ "AfterShotPro","Dialog", "Gcalctool", "VirtualBox", "Vncviewer"
 			, "Gnome-display-properties", "Eclipse"
 			, "javax.swing.JDialog", "Downloads"
 			]
 	ws1       = ["Firefox"]
 	ws2       = ["Pidgin"]
-	ws4	  = ["Zim"]
 
 
 -- defines possible layouts to be switched from
@@ -58,6 +56,8 @@ myLayout = maximize tiled
 scratchpads =
 	[ NS "stalonetray" "stalonetray" (className =? "stalonetray" ) defaultFloating
 	, NS "nm-connection-editor" "nm-connection-editor" (className =? "Nm-connection-editor" ) defaultFloating
+	, NS "XMind" "XMind" (className =? "XMind" ) defaultFloating
+	, NS "evolution" "evolution" (className =? "Evolution" ) defaultFloating
 	, NS "stardict" "stardict" (className =? "Stardict")
 		(customFloating $ W.RationalRect (2/5) (2/5) (1/2) (1/2))
 	] where role = stringProperty "WM_WINDOW_ROLE"
@@ -80,8 +80,8 @@ main = do
 		} `additionalKeysP`
 		[ ("M-C-f", spawn "firefox -P default")
 		, ("M-C-s", namedScratchpadAction scratchpads "stardict")
-		, ("M-C-b", namedScratchpadAction scratchpads "Banshee")
-		, ("M-C-z", namedScratchpadAction scratchpads "Zim")
+		, ("M-C-m", namedScratchpadAction scratchpads "evolution")
+		, ("M-C-z", namedScratchpadAction scratchpads "XMind")
 		, ("M-C-S-c", spawn "setxkbmap cz")
 		, ("M-C-S-e", spawn "setxkbmap us")
 		, ("M-C-l", spawn "xlock -mode blank")
