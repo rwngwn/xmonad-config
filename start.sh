@@ -9,7 +9,7 @@
 #fi
 
 stalonetray & 
-gnome-screensaver &
 nm-applet &
 bluetooth-applet &
+setxkbmap -option caps:swapescape
 
