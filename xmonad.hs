@@ -3,6 +3,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import System.IO
+import XMonad.Actions.GridSelect
 import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -58,6 +59,7 @@ scratchpads =
 	, NS "nm-connection-editor" "nm-connection-editor" (className =? "Nm-connection-editor" ) defaultFloating
 	, NS "XMind" "XMind" (className =? "XMind" ) defaultFloating
 	, NS "evolution" "evolution" (className =? "Evolution" ) defaultFloating
+	, NS "pavucontrol" "pavucontrol" (className =? "Pavucontrol" ) defaultFloating
 	, NS "stardict" "stardict" (className =? "Stardict")
 		(customFloating $ W.RationalRect (2/5) (2/5) (1/2) (1/2))
 	] where role = stringProperty "WM_WINDOW_ROLE"
@@ -66,7 +68,7 @@ main = do
 	xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobarrc"
 	xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
 		{ manageHook 	= namedScratchpadManageHook scratchpads <+> manageDocks <+> myManageHook <+> manageHook defaultConfig 
---		, startupHook	= setWMName "LG3D"
+		--, startupHook	= setWMName "LG3D"
 		, layoutHook 	= avoidStruts  $ smartBorders (myLayout) -- smartBorders assure no borders in fullscreen (Mplayer - neede fstype=none in ~/.mplayer/config 
 		, borderWidth	= 2 
 		, workspaces	= [ "1:web", "2:im", "3:terms", "4:notes" ] ++ map show [5..8] ++ [ "9:media" ]
@@ -81,10 +83,12 @@ main = do
 		[ ("M-C-f", spawn "firefox -P default")
 		, ("M-C-s", namedScratchpadAction scratchpads "stardict")
 		, ("M-C-m", namedScratchpadAction scratchpads "evolution")
-		, ("M-C-z", namedScratchpadAction scratchpads "XMind")
+		, ("M-v", namedScratchpadAction scratchpads "pavucontrol")
+		, ("M-z", namedScratchpadAction scratchpads "XMind")
 		, ("M-C-S-c", spawn "setxkbmap cz")
 		, ("M-C-S-e", spawn "setxkbmap us")
 		, ("M-C-l", spawn "xlock -mode blank")
+		, ("M-.", goToSelected defaultGSConfig)
 
  		]		
 
